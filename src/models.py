@@ -9,3 +9,9 @@ class Document:
     hash_code : str
     size : int
     text : str
+
+@dataclass
+class Chunk:
+    text : str
+    index : int
+    document_hash : str
