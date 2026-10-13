@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: smart-document-auditor-postgres
+    environment:
+      POSTGRES_DB: document_auditor
+      POSTGRES_USER: auditor
+      POSTGRES_PASSWORD: auditor
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
