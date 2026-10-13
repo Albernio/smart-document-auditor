@@ -2,12 +2,14 @@
 
 from pathlib import Path
 
-from src.ingestion import hashing, pdf_extraction
+from src.ingestion import hashing, pdf_extraction, validation
 from src.models import Document
 
 
 def ingest_file(path: Path) -> Document:
-    "Create a hash and create a Document object."
+    "Validate a file, create a hash and create a Document object."
+
+    validation.validate_file(path)
 
     hash_code = hashing.calculate_hash(path)
 
