@@ -1,6 +1,18 @@
 from src.models import Chunk
 
 
+def validate_chunking(chunk_size: int, chunk_overlap: int) -> None:
+    """Validates that chunk size and chunk overlap."""
+    if chunk_size <= 0:
+        raise ValueError("chunk_size must be greater than 0")
+    
+    if chunk_overlap < 0:
+        raise ValueError("chunk_overlap must not be negative")
+
+    if chunk_overlap >= chunk_size:
+        raise ValueError("chunk_size must be greater than chunk_overlap")
+
+
 def chunk_text(
         text: str,
         document_hash: str,
@@ -9,14 +21,7 @@ def chunk_text(
 ) -> list[Chunk]:
     """Split text into overlapping chunks."""
 
-    if chunk_size <= 0:
-        raise ValueError("chunk_size must be greater than 0")
-
-    if chunk_overlap < 0:
-        raise ValueError("chunk_overlap must not be negative")
-
-    if chunk_overlap >= chunk_size:
-        raise ValueError("chunk_size must be greater than chunk_overlap")
+    validate_chunking(chunk_size, chunk_overlap)
 
     if not text:
         return []
