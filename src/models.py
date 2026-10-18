@@ -15,3 +15,8 @@ class Chunk:
     text : str
     index : int
     document_hash : str
+
+@dataclass
+class Embedding:
+    vector: list[float]
+    dimension: int
