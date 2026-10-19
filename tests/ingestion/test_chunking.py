@@ -1,4 +1,5 @@
-from src.ingestion.chunking import chunk_text
+from src.ingestion.chunking import chunk_text, chunk_document
+from src.models import Document
 
 import pytest
 
@@ -64,3 +65,17 @@ def test_chunk_size_must_be_greater_than_overlap():
 
     with pytest.raises(ValueError, match="chunk_size must be greater than chunk_overlap"):
         chunk_text("hello", "abc123", chunk_size=10, chunk_overlap=10)
+
+def test_chunk_document_returns_chunks(tmp_path):
+
+    chunks = chunk_document(
+        Document(
+            name="documento.pdf",
+            path= tmp_path / "documento.pdf",
+            hash_code="abc_123",
+            size=1024,
+            text="A"*1500
+        )
+    )
+
+    assert len(chunks) == 2

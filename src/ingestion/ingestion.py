@@ -2,11 +2,15 @@
 
 from pathlib import Path
 
+from src.persistence.database import get_connection
+from src.persistence.document_repository import DocumentRepository
 from src.ingestion import hashing, pdf_extraction, validation
+from src.ingestion.embeddings import EmbeddingModel
+from src.ingestion.chunking import chunk_document
 from src.models import Document
 
 
-def ingest_file(path: Path) -> Document:
+def ingest_document(path: Path) -> Document:
     "Validate a file, create a hash and create a Document object."
 
     validation.validate_file(path)
@@ -22,3 +26,26 @@ def ingest_file(path: Path) -> Document:
         size=path.stat().st_size,
         text=text,
     )
+
+def persist_document(
+        path: Path,
+        embedding_model: EmbeddingModel,
+    ) -> int:
+    """Ingest a document and persist its chunks and embeddings."""
+
+    document = ingest_document(path)
+
+    chunks = chunk_document(document)
+
+    records = embedding_model.create_vector_records(chunks)
+
+    with get_connection() as connection:
+        repository = DocumentRepository(connection)
+
+        document_id = repository.save_document(document)
+
+        repository.save_vector_records(document_id, records)
+
+        connection.commit()
+    
+    return document_id

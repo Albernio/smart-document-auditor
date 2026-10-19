@@ -1,4 +1,4 @@
-from src.models import Chunk
+from src.models import Chunk, Document
 
 
 def validate_chunking(chunk_size: int, chunk_overlap: int) -> None:
@@ -44,5 +44,16 @@ def chunk_text(
 
         if start + chunk_size >= len(text):
             break
+
+    return chunks
+
+def chunk_document(
+        document: Document,
+        chunk_size: int = 1000,
+        chunk_overlap: int = 200,
+    ) -> list[Chunk]:
+    """Split document into overlapping chunks."""
+
+    chunks = chunk_text(document.text, document.hash_code)
 
     return chunks
