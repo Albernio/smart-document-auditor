@@ -1,6 +1,6 @@
 import psycopg
 
-from src.models import Document, VectorRecord
+from src.models import Document, VectorRecord, SearchResult, Chunk
 
 
 class DocumentRepository:
@@ -63,3 +63,48 @@ class DocumentRepository:
                         str(record.embedding.vector)
                     ),
                 )
+
+    def search_similar(
+            self,
+            query_embedding: list[float],
+            limit: int = 5,
+    ) -> list[SearchResult]:
+        """Search for the most similar results"""
+
+        if limit <= 0:
+            raise ValueError("Limit must be greater than 0.")
+
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT 
+                    dc.text,
+                    dc.chunk_index,
+                    d.hash_code,
+                    dc.embedding <=> %s::vector AS distance
+                FROM document_chunks AS dc
+                JOIN documents AS d
+                    ON dc.document_id = d.id
+                    ORDER BY dc.embedding <=> %s::vector
+                LIMIT %s;
+                """,
+                (
+                    str(query_embedding),
+                    str(query_embedding),
+                    limit,
+                ),
+            )
+
+            rows = cursor.fetchall()
+
+        return [
+            SearchResult(
+                chunk = Chunk(
+                    text=row[0],
+                    index=row[1],
+                    document_hash=row[2],
+                ),
+                distance=float(row[3]),
+            )
+            for row in rows
+        ]

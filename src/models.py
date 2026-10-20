@@ -8,7 +8,7 @@ class Document:
     name : str
     hash_code : str
     size : int
-    text : str
+    text : str = ""
 
 @dataclass
 class Chunk:
