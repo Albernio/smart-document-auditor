@@ -1,5 +1,5 @@
 from src.ingestion.embeddings import EmbeddingModel
-from src.models import SearchResult, Chunk
+from src.models import SearchResult
 from src.persistence.document_repository import DocumentRepository
 
 
