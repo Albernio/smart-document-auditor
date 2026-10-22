@@ -83,6 +83,7 @@ class DocumentRepository:
                     dc.text,
                     dc.chunk_index,
                     d.hash_code,
+                    dc.page_number,
                     dc.embedding <=> %s::vector AS distance
                 FROM document_chunks AS dc
                 JOIN documents AS d
@@ -105,6 +106,7 @@ class DocumentRepository:
                     text=row[0],
                     index=row[1],
                     document_hash=row[2],
+                    page_number=row[3],
                 ),
                 distance=float(row[3]),
             )

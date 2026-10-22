@@ -94,5 +94,6 @@ if uploaded_file is not None:
 
             st.write(
                 f"- Document: `{chunk.document_hash}` | "
+                f"- Page: `{chunk.page_number}` | "
                 f"Chunk: `{chunk.index}`"
             )
