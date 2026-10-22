@@ -236,4 +236,5 @@ Streamlit will display the local URL for accessing the application, usually `htt
 - **uv:** If you use this package manager, keep `uv.lock` in the repository to ensure reproducible dependency versions.
 - **PostgreSQL:** The database service must be running, and its credentials must match the application's configuration.
 - **Ollama:** You must have Ollama installed and running, and download the LLM model used by the project.
+- **Tesseract OCR** You must have Tesseract OCR installed, along with english and spanish language data for it.
 - **Configuration:** Review the environment variables and configuration files before starting the application.
