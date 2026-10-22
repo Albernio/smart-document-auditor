@@ -14,8 +14,7 @@ def validate_chunking(chunk_size: int, chunk_overlap: int) -> None:
 
 
 def chunk_text(
-        text: str,
-        document_hash: str,
+        document: Document,
         chunk_size: int = 1000,
         chunk_overlap: int = 200
 ) -> list[Chunk]:
@@ -23,37 +22,34 @@ def chunk_text(
 
     validate_chunking(chunk_size, chunk_overlap)
 
-    if not text:
+    if document.pages == [(1, 0)]:
         return []
 
     step = chunk_size - chunk_overlap
 
     chunks = []
+    chunk_index = 1
 
-    for start in range(0, len(text), step):
+    for page in document.pages:
 
-        chnk_text = text[start:start + chunk_size]
+        text = page[1]
 
-        chunks.append(
-            Chunk(
-                text=chnk_text,
-                index=len(chunks),
-                document_hash=document_hash,
+        for start in range(0, len(text), step):
+
+            chnk_text = text[start:start + chunk_size]
+
+            chunks.append(
+                Chunk(
+                    text=chnk_text,
+                    index=chunk_index,
+                    document_hash=document.hash_code,
+                    page_number=page[0],
+                )
             )
-        )
 
-        if start + chunk_size >= len(text):
-            break
+            chunk_index += 1
 
-    return chunks
-
-def chunk_document(
-        document: Document,
-        chunk_size: int = 1000,
-        chunk_overlap: int = 200,
-    ) -> list[Chunk]:
-    """Split document into overlapping chunks."""
-
-    chunks = chunk_text(document.text, document.hash_code)
+            if start + chunk_size >= len(text):
+                break
 
     return chunks

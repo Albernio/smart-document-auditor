@@ -16,7 +16,6 @@ def test_save_document(database_connection):
             path=Path("documento.pdf"),
             hash_code="abc123",
             size=1024,
-            text="Document content",
         )
     )
 
@@ -46,7 +45,6 @@ def test_save_vector_records(database_connection):
         path=Path("contract.pdf"),
         hash_code="def456",
         size=2048,
-        text="Contract content",
     )
 
     records = [
@@ -54,7 +52,8 @@ def test_save_vector_records(database_connection):
             Chunk(
                 text="chunk_1",
                 index=1,
-                document_hash="def456"
+                document_hash="def456",
+                page_number=1
             ),
             Embedding(
                 vector=[1.0] + [0.0] * 383,
@@ -65,7 +64,8 @@ def test_save_vector_records(database_connection):
             Chunk(
                 text="chunk_2",
                 index=2,
-                document_hash="def456"
+                document_hash="def456",
+                page_number=1
             ),
             Embedding(
                 vector=[0.0] + [1.0] + [0.0] * 382,
@@ -123,6 +123,7 @@ def test_search_similar_returns_search_results(database_connection):
                     text="The provider must respond within thirty days.",
                     index=0,
                     document_hash=document.hash_code,
+                    page_number=1
                 ),
                 embedding=Embedding(
                     vector=[1.0] + [0.0]*383,
@@ -162,6 +163,7 @@ def test_search_similar_queries_return_similar_chunks(database_connection):
                 text="The provider must respond within thirty days.",
                 index=0,
                 document_hash=document.hash_code,
+                page_number=1
             ),
             embedding=Embedding(
                 vector=[1.0] + [0.0]*383,
@@ -173,6 +175,7 @@ def test_search_similar_queries_return_similar_chunks(database_connection):
                 text="The supplier must protect personal data.",
                 index=1,
                 document_hash=document.hash_code,
+                page_number=1
             ),
             embedding=Embedding(
                 vector=[0.0, 1.0] + [0.0]*382,
@@ -184,6 +187,7 @@ def test_search_similar_queries_return_similar_chunks(database_connection):
                 text="The contract is valid for two years.",
                 index=2,
                 document_hash=document.hash_code,
+                page_number=1
             ),
             embedding=Embedding(
                 vector=[0.0, 0.0, 1.0] + [0.0]*381,
@@ -224,6 +228,7 @@ def test_search_similar_preserves_document_hash(database_connection):
                 text="The provider must respond within thirty days.",
                 index=0,
                 document_hash=document.hash_code,
+                page_number=1
             ),
             embedding=Embedding(
                 vector=[1.0] + [0.0]*383,
@@ -261,6 +266,7 @@ def test_search_similar_respects_limit(database_connection):
                 text="The provider must respond within thirty days.",
                 index=0,
                 document_hash=document.hash_code,
+                page_number=1
             ),
             embedding=Embedding(
                 vector=[1.0] + [0.0]*383,
@@ -272,6 +278,7 @@ def test_search_similar_respects_limit(database_connection):
                 text="The supplier must protect personal data.",
                 index=1,
                 document_hash=document.hash_code,
+                page_number=1
             ),
             embedding=Embedding(
                 vector=[0.0, 1.0] + [0.0]*382,
@@ -283,6 +290,7 @@ def test_search_similar_respects_limit(database_connection):
                 text="The contract is valid for two years.",
                 index=2,
                 document_hash=document.hash_code,
+                page_number=1
             ),
             embedding=Embedding(
                 vector=[0.0, 0.0, 1.0] + [0.0]*381,
@@ -330,6 +338,7 @@ def test_search_similar_orders_by_distance(database_connection):
                 text="The provider must respond within thirty days.",
                 index=0,
                 document_hash=document.hash_code,
+                page_number=1
             ),
             embedding=Embedding(
                 vector=[1.0] + [0.0]*383,
@@ -341,6 +350,7 @@ def test_search_similar_orders_by_distance(database_connection):
                 text="The supplier must protect personal data.",
                 index=1,
                 document_hash=document.hash_code,
+                page_number=1
             ),
             embedding=Embedding(
                 vector=[0.0, 1.0] + [0.0]*382,

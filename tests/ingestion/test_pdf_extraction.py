@@ -29,9 +29,12 @@ def test_text_extraction_one_page(tmp_path):
 
     create_test_pdf(path, ["contenido de prueba"])
 
-    text = extract_text(path)
+    pages = extract_text(path)
 
-    assert "contenido de prueba" in text
+    assert any(
+        "contenido de prueba" in text
+        for _, text in pages
+    )
 
 def test_text_extraction_several_pages(tmp_path):
 
@@ -46,8 +49,17 @@ def test_text_extraction_several_pages(tmp_path):
         ],
     )
 
-    text = extract_text(path)
-
-    assert "contenido pagina 1" in text
-    assert "contenido pagina 2" in text
-    assert "contenido pagina 3" in text
+    pages = extract_text(path)
+    
+    assert any(
+            "contenido pagina 1" in text
+            for _, text in pages
+        )
+    assert any(
+            "contenido pagina 2" in text
+            for _, text in pages
+        )
+    assert any(
+            "contenido pagina 3" in text
+            for _, text in pages
+        )

@@ -52,14 +52,16 @@ class DocumentRepository:
                         document_id,
                         chunk_index,
                         text,
+                        page_number,
                         embedding
                     )
-                    VALUES (%s, %s, %s, %s::vector);
+                    VALUES (%s, %s, %s, %s, %s::vector);
                     """,
                     (
                         document_id,
                         record.chunk.index,
                         record.chunk.text,
+                        record.chunk.page_number,
                         str(record.embedding.vector)
                     ),
                 )

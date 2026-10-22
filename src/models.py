@@ -8,13 +8,14 @@ class Document:
     name : str
     hash_code : str
     size : int
-    text : str = ""
+    pages : list[tuple[int, str]] | None = None
 
 @dataclass
 class Chunk:
     text : str
     index : int
     document_hash : str
+    page_number : int | None = None
 
 @dataclass
 class Embedding:

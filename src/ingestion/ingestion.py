@@ -6,7 +6,7 @@ from src.persistence.database import get_connection
 from src.persistence.document_repository import DocumentRepository
 from src.ingestion import hashing, pdf_extraction, validation
 from src.ingestion.embeddings import EmbeddingModel
-from src.ingestion.chunking import chunk_document
+from src.ingestion.chunking import chunk_text
 from src.models import Document
 
 
@@ -17,14 +17,14 @@ def ingest_document(path: Path) -> Document:
 
     hash_code = hashing.calculate_hash(path)
 
-    text = pdf_extraction.extract_text(path)
+    pages = pdf_extraction.extract_text(path)
 
     return Document(
         path=path,
         name=path.name,
         hash_code=hash_code,
         size=path.stat().st_size,
-        text=text,
+        pages=pages,
     )
 
 def persist_document(
@@ -35,7 +35,7 @@ def persist_document(
 
     document = ingest_document(path)
 
-    chunks = chunk_document(document)
+    chunks = chunk_text(document)
 
     records = embedding_model.create_vector_records(chunks)
 

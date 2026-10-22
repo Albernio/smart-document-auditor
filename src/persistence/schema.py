@@ -32,6 +32,7 @@ def create_tables() -> None:
                         ON DELETE CASCADE,
                     chunk_index INTEGER NOT NULL,
                     text TEXT NOT NULL,
+                    page_number INTEGER NOT NULL,
                     embedding vector(384) NOT NULL,
                     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
                     UNIQUE (document_id, chunk_index)

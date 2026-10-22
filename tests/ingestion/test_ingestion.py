@@ -36,7 +36,10 @@ def test_ingest_document_creates_document(tmp_path):
     assert document.name == "document.pdf"
     assert document.hash_code
     assert document.size > 0
-    assert "contenido de prueba" in document.text
+    assert any(
+        "contenido de prueba" in text
+        for _, text in document.pages
+    )
 
 def test_ingest_document_rejects_non_pdf(tmp_path):
 
@@ -71,7 +74,9 @@ def test_ingest_document_accepts_pdf_without_text(tmp_path):
     assert document.name == "no_text.pdf"
     assert document.hash_code
     assert document.size > 0
-    assert document.text == ""
+
+    assert len(document.pages) == 1
+    assert document.pages[0][1] == ""
 
 def test_persist_document(tmp_path):
     path = tmp_path / "documento.pdf"
@@ -128,3 +133,24 @@ def test_persist_document_persists_document_metadata(tmp_path, database_connecti
         expected_hash,
         expected_size
     )
+
+def test_persist_document_persists_page_number(tmp_path, database_connection):
+    path = tmp_path / "documento.pdf"
+
+    create_test_pdf(path, ["This is the content of page 1", "This is the content of page 2"])
+
+    document_id = persist_document(path, EmbeddingModel())
+    
+    with database_connection.cursor() as cursor:
+        cursor.execute(
+            """
+            SELECT page_number
+            FROM document_chunks
+            WHERE document_id=%s;
+            """,
+            (document_id,),
+        )
+        result = cursor.fetchall()
+
+    assert result[0][0] == 1
+    assert result[1][0] == 2
