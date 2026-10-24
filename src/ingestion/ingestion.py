@@ -17,7 +17,7 @@ def ingest_document(path: Path) -> Document:
 
     hash_code = hashing.calculate_hash(path)
 
-    pages = pdf_extraction.extract_text(path)
+    pages = pdf_extraction.extract_pages(path)
 
     return Document(
         path=path,

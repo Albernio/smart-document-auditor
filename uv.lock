@@ -1232,6 +1232,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "ollama" },
+    { name = "pillow" },
     { name = "psycopg", extra = ["binary"] },
     { name = "pymupdf" },
     { name = "pytesseract" },
@@ -1247,6 +1248,7 @@ test = [
 [package.metadata]
 requires-dist = [
     { name = "ollama", specifier = ">=0.6" },
+    { name = "pillow", specifier = ">=13.0.0" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.2" },
     { name = "pymupdf", specifier = ">=1.24.0" },
     { name = "pytesseract", specifier = ">=0.3.13" },
