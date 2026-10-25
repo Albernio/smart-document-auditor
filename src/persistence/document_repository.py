@@ -108,7 +108,7 @@ class DocumentRepository:
                     document_hash=row[2],
                     page_number=row[3],
                 ),
-                distance=float(row[3]),
+                distance=float(row[4]),
             )
             for row in rows
         ]
